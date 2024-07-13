@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import chess
+import chess.svg
 import itertools
 
 from typing import Dict, Generic, Hashable, Iterable, Iterator, List, Optional, Type, TypeVar, Union
@@ -180,6 +181,59 @@ class AntichessBoard(GiveawayBoard):
     def reset(self) -> None:
         super().reset()
         self.castling_rights = chess.BB_EMPTY
+
+
+# class GhostChessBoard(chess.Board):
+
+#     aliases = ["Ghost", "Ghost Chess"]
+#     uci_variant = "ghost"
+#     xboard_variant = "ghost"
+
+#     def __init__(self, fen: Optional[str] = chess.STARTING_FEN, chess960: bool = False) -> None:
+#         super().__init__(fen, chess960=chess960)
+#         self.ghost_pieces = {chess.WHITE: [], chess.BLACK: []}  # Ghost piece positions
+
+#     def add_ghost_piece(self, color: chess.Color, position: chess.Square) -> None:
+#         self.ghost_pieces[color].append(position)
+
+#     def move_ghost_piece(self, color: chess.Color, from_square: chess.Square, to_square: chess.Square) -> None:
+#         if from_square in self.ghost_pieces[color]:
+#             self.ghost_pieces[color].remove(from_square)
+#             self.ghost_pieces[color].append(to_square)
+#         else:
+#             raise ValueError("No ghost piece at the specified position")
+
+#     def reveal_ghost_piece(self, color: chess.Color, position: chess.Square) -> None:
+#         if position in self.ghost_pieces[color]:
+#             self.ghost_pieces[color].remove(position)
+#             self.set_piece_at(position, chess.Piece(chess.KNIGHT, color))
+#         else:
+#             raise ValueError("No ghost piece at the specified position")
+
+#     def generate_ghost_moves(self, color: chess.Color) -> List[chess.Move]:
+#         moves = []
+#         for position in self.ghost_pieces[color]:
+#             knight_moves = chess.SquareSet(chess.BB_KNIGHT_ATTACKS[position])
+#             for move in knight_moves:
+#                 if self.is_legal(chess.Move(position, move)):
+#                     moves.append(chess.Move(position, move))
+#         return moves
+
+#     def is_variant_end(self) -> bool:
+#         return self.is_checkmate() or self.is_stalemate()
+
+#     def is_variant_win(self) -> bool:
+#         return self.is_checkmate()
+
+#     def is_variant_loss(self) -> bool:
+#         return self.is_stalemate()
+
+#     def is_variant_draw(self) -> bool:
+#         return self.is_stalemate() or self.is_insufficient_material()
+
+#     def status(self) -> chess.Status:
+#         status = super().status()
+#         return status
 
 
 class AtomicBoard(chess.Board):
@@ -417,6 +471,28 @@ class RacingKingsBoard(chess.Board):
                 status |= chess.STATUS_RACE_MATERIAL
         return status
 
+
+class ThreePawnsVsKingBoard(chess.Board):
+    aliases = ["Three Pawns vs. One King"]
+    uci_variant = "threepawns_king"
+    xboard_variant = "threepawns_king"
+    
+    starting_fen = "8/8/8/8/8/8/8/RNBQKBNR w - - 0 1"
+
+    def __init__(self, fen: Optional[str] = starting_fen, chess960: bool = False) -> None:
+        super().__init__(fen, chess960=chess960)
+
+    def is_variant_end(self) -> bool:
+        return self.is_checkmate() or self.is_stalemate() or not self.occupied_co[chess.BLACK]
+
+    def is_variant_win(self) -> bool:
+        return self.is_checkmate()
+
+    def is_variant_loss(self) -> bool:
+        return self.is_stalemate() or not self.occupied_co[chess.WHITE]
+
+    def is_variant_draw(self) -> bool:
+        return self.is_stalemate()
 
 class HordeBoard(chess.Board):
 
@@ -1059,6 +1135,7 @@ VARIANTS: List[Type[chess.Board]] = [
     HordeBoard,
     ThreeCheckBoard,
     CrazyhouseBoard,
+    ThreePawnsVsKingBoard,
 ]
 
 
