@@ -183,59 +183,6 @@ class AntichessBoard(GiveawayBoard):
         self.castling_rights = chess.BB_EMPTY
 
 
-# class GhostChessBoard(chess.Board):
-
-#     aliases = ["Ghost", "Ghost Chess"]
-#     uci_variant = "ghost"
-#     xboard_variant = "ghost"
-
-#     def __init__(self, fen: Optional[str] = chess.STARTING_FEN, chess960: bool = False) -> None:
-#         super().__init__(fen, chess960=chess960)
-#         self.ghost_pieces = {chess.WHITE: [], chess.BLACK: []}  # Ghost piece positions
-
-#     def add_ghost_piece(self, color: chess.Color, position: chess.Square) -> None:
-#         self.ghost_pieces[color].append(position)
-
-#     def move_ghost_piece(self, color: chess.Color, from_square: chess.Square, to_square: chess.Square) -> None:
-#         if from_square in self.ghost_pieces[color]:
-#             self.ghost_pieces[color].remove(from_square)
-#             self.ghost_pieces[color].append(to_square)
-#         else:
-#             raise ValueError("No ghost piece at the specified position")
-
-#     def reveal_ghost_piece(self, color: chess.Color, position: chess.Square) -> None:
-#         if position in self.ghost_pieces[color]:
-#             self.ghost_pieces[color].remove(position)
-#             self.set_piece_at(position, chess.Piece(chess.KNIGHT, color))
-#         else:
-#             raise ValueError("No ghost piece at the specified position")
-
-#     def generate_ghost_moves(self, color: chess.Color) -> List[chess.Move]:
-#         moves = []
-#         for position in self.ghost_pieces[color]:
-#             knight_moves = chess.SquareSet(chess.BB_KNIGHT_ATTACKS[position])
-#             for move in knight_moves:
-#                 if self.is_legal(chess.Move(position, move)):
-#                     moves.append(chess.Move(position, move))
-#         return moves
-
-#     def is_variant_end(self) -> bool:
-#         return self.is_checkmate() or self.is_stalemate()
-
-#     def is_variant_win(self) -> bool:
-#         return self.is_checkmate()
-
-#     def is_variant_loss(self) -> bool:
-#         return self.is_stalemate()
-
-#     def is_variant_draw(self) -> bool:
-#         return self.is_stalemate() or self.is_insufficient_material()
-
-#     def status(self) -> chess.Status:
-#         status = super().status()
-#         return status
-
-
 class AtomicBoard(chess.Board):
 
     aliases = ["Atomic", "Atom", "Atomic chess"]
