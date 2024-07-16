@@ -418,29 +418,6 @@ class RacingKingsBoard(chess.Board):
                 status |= chess.STATUS_RACE_MATERIAL
         return status
 
-
-class ThreePawnsVsKingBoard(chess.Board):
-    aliases = ["Three Pawns vs. One King"]
-    uci_variant = "threepawns_king"
-    xboard_variant = "threepawns_king"
-    
-    starting_fen = "8/8/8/8/8/8/8/RNBQKBNR w - - 0 1"
-
-    def __init__(self, fen: Optional[str] = starting_fen, chess960: bool = False) -> None:
-        super().__init__(fen, chess960=chess960)
-
-    def is_variant_end(self) -> bool:
-        return self.is_checkmate() or self.is_stalemate() or not self.occupied_co[chess.BLACK]
-
-    def is_variant_win(self) -> bool:
-        return self.is_checkmate()
-
-    def is_variant_loss(self) -> bool:
-        return self.is_stalemate() or not self.occupied_co[chess.WHITE]
-
-    def is_variant_draw(self) -> bool:
-        return self.is_stalemate()
-
 class HordeBoard(chess.Board):
 
     aliases = ["Horde", "Horde chess"]
